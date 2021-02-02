@@ -21,7 +21,6 @@ const Autorize = ({ isAuth, hideAuthForm }) => {
       isAuth(true);
       hideAuthForm(false);
       setShowContacts(true);
-      console.log(email);
     } else {
       showAlert(true);
       setTimeout(() => {
@@ -77,7 +76,7 @@ const Autorize = ({ isAuth, hideAuthForm }) => {
           </Button>
         </form>
       </Container>
-      {showContacts && <Contacts email={email} />}
+      {showContacts && <Contacts />}
     </>
   );
 };

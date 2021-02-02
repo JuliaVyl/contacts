@@ -16,7 +16,9 @@ import Api from './api';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
+    width: '100%',
     maxWidth: 752,
+    position: 'relative',
   },
   demo: {
     backgroundColor: theme.palette.background.paper,
@@ -26,22 +28,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Contacts = ({ email }) => {
+const Contacts = ({ inputSearch }) => {
   const [users, setUsers] = useState(null);
+  // const [inputField, setSearch] = useState();
 
   useEffect(() => {
     async function fetchData() {
-      const data = await Api.getUsers();
+      let data = await Api.getUsers();
+      if (inputSearch !== '') {
+        data = data.filter(
+          (user) =>
+            user.email.includes(inputSearch.toLowerCase().trim()) ||
+            user.name
+              .toLowerCase()
+              .trim()
+              .includes(inputSearch.toLowerCase().trim())
+        );
+      }
+
       setUsers(data);
-      console.log(data);
     }
     fetchData();
-  }, []);
+  }, [inputSearch]);
 
   const classes = useStyles();
   return (
     <>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12}>
         <div className={classes.demo}>
           {users && (
             <List>
@@ -49,7 +62,7 @@ const Contacts = ({ email }) => {
                 return (
                   <ListItem key={user.email}>
                     <ListItemAvatar>
-                      <Avatar alt='avatar-icon' src={user.url} />
+                      <Avatar alt={user.name} src={user.url} />
                     </ListItemAvatar>
                     <ListItemText primary={user.name} />
                     <ListItemSecondaryAction>
