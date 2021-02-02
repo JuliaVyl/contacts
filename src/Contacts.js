@@ -8,10 +8,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
 import { useEffect, useState } from 'react';
 import Api from './api';
+import Friends from './Friends';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,7 +29,9 @@ const useStyles = makeStyles((theme) => ({
 
 const Contacts = ({ inputSearch }) => {
   const [users, setUsers] = useState(null);
-  // const [inputField, setSearch] = useState();
+  const [friends, setFriends] = useState([]);
+
+  console.log(friends);
 
   useEffect(() => {
     async function fetchData() {
@@ -51,10 +52,18 @@ const Contacts = ({ inputSearch }) => {
     fetchData();
   }, [inputSearch]);
 
+  const addFriend = (user) => {
+    if (friends.includes(user)) return;
+    setFriends([...friends, user]);
+  };
+
   const classes = useStyles();
+
   return (
     <>
+      {friends.length && <Friends users={friends} />}
       <Grid item xs={12}>
+        <h1 style={{ textAlign: 'center' }}>All people</h1>
         <div className={classes.demo}>
           {users && (
             <List>
@@ -66,14 +75,12 @@ const Contacts = ({ inputSearch }) => {
                     </ListItemAvatar>
                     <ListItemText primary={user.name} />
                     <ListItemSecondaryAction>
-                      <IconButton edge='end' aria-label='add'>
+                      <IconButton
+                        edge='end'
+                        aria-label='add'
+                        onClick={() => addFriend(user)}
+                      >
                         <AddIcon />
-                      </IconButton>
-                      <IconButton edge='end' aria-label='edit'>
-                        <EditIcon />
-                      </IconButton>
-                      <IconButton edge='end' aria-label='delete'>
-                        <DeleteIcon />
                       </IconButton>
                     </ListItemSecondaryAction>
                   </ListItem>
