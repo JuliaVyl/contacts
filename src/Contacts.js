@@ -8,6 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { useEffect, useState } from 'react';
 import Api from './api';
 import Friends from './Friends';
@@ -56,12 +57,17 @@ const Contacts = ({ inputSearch }) => {
     if (friends.includes(user)) return;
     setFriends([...friends, user]);
   };
+  const deleteFriend = (u) => {
+    const index = friends.findIndex((user) => u.name === user.name);
+    console.log(index);
+    setFriends([...friends.splice(0, index), ...friends.splice(index + 1)]);
+  };
 
   const classes = useStyles();
 
   return (
     <>
-      {friends.length && <Friends users={friends} />}
+      {friends.length > 0 && <Friends users={friends} />}
       <Grid item xs={12}>
         <h1 style={{ textAlign: 'center' }}>All people</h1>
         <div className={classes.demo}>
@@ -75,13 +81,24 @@ const Contacts = ({ inputSearch }) => {
                     </ListItemAvatar>
                     <ListItemText primary={user.name} />
                     <ListItemSecondaryAction>
-                      <IconButton
-                        edge='end'
-                        aria-label='add'
-                        onClick={() => addFriend(user)}
-                      >
-                        <AddIcon />
-                      </IconButton>
+                      {!friends.includes(user) && (
+                        <IconButton
+                          edge='end'
+                          aria-label='add'
+                          onClick={() => addFriend(user)}
+                        >
+                          <AddIcon />
+                        </IconButton>
+                      )}
+                      {friends.includes(user) && (
+                        <IconButton
+                          edge='end'
+                          aria-label='delete'
+                          onClick={() => deleteFriend(user)}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      )}
                     </ListItemSecondaryAction>
                   </ListItem>
                 );
