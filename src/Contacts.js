@@ -32,8 +32,6 @@ const Contacts = ({ inputSearch }) => {
   const [users, setUsers] = useState(null);
   const [friends, setFriends] = useState([]);
 
-  console.log(friends);
-
   useEffect(() => {
     async function fetchData() {
       let data = await Api.getUsers();
@@ -58,13 +56,21 @@ const Contacts = ({ inputSearch }) => {
     setFriends([...friends, user]);
   };
   const deleteFriend = (u) => {
-    const index = friends.findIndex((user) => u.name === user.name);
-    console.log(index);
-    // setFriends([...friends.splice(index), ...friends.splice(index + 1)]);
-    const filteredItems = friends.filter(
-      (user) => JSON.stringify(u) !== JSON.stringify(user)
-    );
-    setFriends([...filteredItems]);
+    const filteredItems = friends.filter((user) => u.email !== user.email);
+    setFriends(filteredItems);
+  };
+
+  const editFriend = (email, inputName) => {
+    // const index = users.indexOf(user);
+    // console.log('index: ' + index);
+
+    let changedUsers = friends.map((u) => {
+      if (u.email === email) {
+        u.name = inputName;
+      }
+      return u;
+    });
+    setFriends(changedUsers);
   };
 
   const classes = useStyles();
@@ -72,7 +78,11 @@ const Contacts = ({ inputSearch }) => {
   return (
     <>
       {friends.length > 0 && (
-        <Friends users={friends} deleteFriend={deleteFriend} />
+        <Friends
+          friends={friends}
+          deleteFriend={deleteFriend}
+          editFriend={editFriend}
+        />
       )}
       <Grid item xs={12}>
         <h1 style={{ textAlign: 'center' }}>All people</h1>
@@ -85,7 +95,10 @@ const Contacts = ({ inputSearch }) => {
                     <ListItemAvatar>
                       <Avatar alt={user.name} src={user.url} />
                     </ListItemAvatar>
-                    <ListItemText primary={user.name} />
+                    <ListItemText
+                      primary={user.name}
+                      secondary={`(${user.email.toLowerCase()})`}
+                    />
                     <ListItemSecondaryAction>
                       {!friends.includes(user) && (
                         <IconButton
