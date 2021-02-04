@@ -29,28 +29,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Friends = ({ users }) => {
-  // Edit pannel
-  // const [showEditPannel, setEditPannel] = useState(false);
-  // const [inputName, setInputName] = useState('');
-
-  // const handleEdit = (e) => (user) => {
-  //   setEditPannel(true);
-  //   editContact(user, e.target.value);
-  //   setInputName('');
-  //   setEditPannel(false);
-  // };
-  //
+const Friends = ({ users, deleteFriend }) => {
   const classes = useStyles();
   const [friends, setFriends] = useState([...users]);
-
-  // const editContact = (user, input) => {
-  //   for (let u of friends) {
-  //     if (JSON.stringify(u) === JSON.stringify(user)) {
-  //       u.name = input;
-  //     }
-  //   }
-  // };
 
   useEffect(() => {
     setFriends([...users]);
@@ -60,11 +41,6 @@ const Friends = ({ users }) => {
     <>
       <Grid item xs={12}>
         <h1 style={{ textAlign: 'center' }}>Your contacts</h1>
-        {/* {friends.length === 0 && (
-          <p style={{ textAlign: 'center', paddingBottom: 0 }}>
-            You have no friends yet...
-          </p>
-        )} */}
         {/* {showEditPannel && (
           <form>
             <TextField
@@ -92,7 +68,11 @@ const Friends = ({ users }) => {
                     <IconButton edge='end' aria-label='edit'>
                       <EditIcon />
                     </IconButton>
-                    <IconButton edge='end' aria-label='delete'>
+                    <IconButton
+                      edge='end'
+                      aria-label='delete'
+                      onClick={() => deleteFriend(user)}
+                    >
                       <DeleteIcon />
                     </IconButton>
                   </ListItemSecondaryAction>

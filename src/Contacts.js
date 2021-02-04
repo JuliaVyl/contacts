@@ -60,14 +60,20 @@ const Contacts = ({ inputSearch }) => {
   const deleteFriend = (u) => {
     const index = friends.findIndex((user) => u.name === user.name);
     console.log(index);
-    setFriends([...friends.splice(0, index), ...friends.splice(index + 1)]);
+    // setFriends([...friends.splice(index), ...friends.splice(index + 1)]);
+    const filteredItems = friends.filter(
+      (user) => JSON.stringify(u) !== JSON.stringify(user)
+    );
+    setFriends([...filteredItems]);
   };
 
   const classes = useStyles();
 
   return (
     <>
-      {friends.length > 0 && <Friends users={friends} />}
+      {friends.length > 0 && (
+        <Friends users={friends} deleteFriend={deleteFriend} />
+      )}
       <Grid item xs={12}>
         <h1 style={{ textAlign: 'center' }}>All people</h1>
         <div className={classes.demo}>
